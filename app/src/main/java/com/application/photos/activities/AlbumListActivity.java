@@ -24,6 +24,7 @@ public class AlbumListActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private AlbumAdapter albumAdapter;
     private Button buttonCreateAlbum;
+    private Button buttonSearchPhotos;
 
     private AlbumList albumList;
 
@@ -33,11 +34,16 @@ public class AlbumListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_albumlist);
 
         buttonCreateAlbum = (Button) findViewById(R.id.buttonCreateAlbum);
+        buttonSearchPhotos = (Button) findViewById(R.id.buttonSearchPhotos);
 
         recyclerView = (RecyclerView) findViewById(R.id.recyclerViewAlbumList);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setHasFixedSize(false);
+    }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
         albumList = AlbumList.readAlbumList(this);
 
         albumAdapter = new AlbumAdapter(this, albumList);
@@ -78,15 +84,22 @@ public class AlbumListActivity extends AppCompatActivity {
                 dialogBuilder.show();
             }
         });
+
+        buttonSearchPhotos.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //TODO: Search photos by tags
+            }
+        });
     }
 
     @Override
     protected void onStop() {
-        super.onStop();
         try {
             AlbumList.writeAlbumList(this, albumList);
         } catch (IOException e) {
             e.printStackTrace();
         }
+        super.onStop();
     }
 }

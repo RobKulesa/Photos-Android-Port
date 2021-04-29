@@ -116,6 +116,13 @@ public class Album implements Serializable {
         return this.photos.contains(p);
     }
 
+    public boolean containsPhoto(String path) {
+        for(Photo p : this.photos) {
+            if(p.getPath().equalsIgnoreCase(path)) return true;
+        }
+        return false;
+    }
+
     /**
      * Returns <code>true</code> if the passed string or album's name is equal to this album's name.
      * 

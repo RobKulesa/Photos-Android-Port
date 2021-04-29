@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -15,6 +16,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.application.photos.R;
 import com.application.photos.adapters.AlbumAdapter;
@@ -51,9 +53,23 @@ public class OpenAlbumActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_IMAGE_OPEN && resultCode == RESULT_OK) {
             Uri fullPhotoUri = data.getData();
-            album.addPhoto(new Photo(fullPhotoUri));
+            if(album.containsPhoto(fullPhotoUri.toString())) {
+                Toast.makeText(this, "This photo is already in this album!", Toast.LENGTH_LONG).show();
+                return;
+            }
+            album.addPhoto(new Photo(fullPhotoUri.toString()));
             photoAdapter.notifyItemInserted(album.getNumPhotos());
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        try {
+            AlbumList.writeAlbumList(this, albumList);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        super.onBackPressed();
     }
 
     @Override
@@ -67,11 +83,15 @@ public class OpenAlbumActivity extends AppCompatActivity {
         recyclerViewPhotoList.setLayoutManager(new LinearLayoutManager(this));
         recyclerViewPhotoList.setHasFixedSize(false);
 
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
         albumList = (AlbumList) getIntent().getSerializableExtra("albumList");
         int index = getIntent().getIntExtra("album", 0);
         album = albumList.getAlbum(index);
-
-        photoAdapter = new PhotoAdapter(this, album);
+        photoAdapter = new PhotoAdapter(this, albumList, index);
         recyclerViewPhotoList.setAdapter(photoAdapter);
         photoAdapter.notifyDataSetChanged();
 
@@ -86,12 +106,12 @@ public class OpenAlbumActivity extends AppCompatActivity {
 
     @Override
     protected void onStop() {
-        super.onStop();
         try {
             AlbumList.writeAlbumList(this, albumList);
         } catch (IOException e) {
             e.printStackTrace();
         }
+        super.onStop();
     }
 
 }

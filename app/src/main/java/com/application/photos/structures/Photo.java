@@ -43,7 +43,7 @@ public class Photo implements Serializable {
     /**
      * path of this photo.
      */
-    private Uri uri;
+    private String path;
 
     private Bitmap bitmap;
 
@@ -52,36 +52,20 @@ public class Photo implements Serializable {
      */
     private TreeMap<String, ArrayList<String>> tags;
 
-    /**
-     * Constructor for creating a new photo given its path on the filesystem.
-     * 
-     * @param uri    The path of this photo on the filesystem.
-     */
-    public Photo(Uri uri) {
-        this.uri = uri;
+    public Photo(String path) {
+        this.path = path;
         this.tags = new TreeMap<>(
                 (Comparator<String> & Serializable) (o1, o2) -> o1.compareToIgnoreCase(o2)
         );
     }
 
-    /**
-     * Return the filesystem path of this photo.
-     * 
-     * @return    The path on the filesystem of this photo.
-     */
-    public Uri getUri(){
-        return this.uri;
-    }
-    
-    /**
-     * Set the filesystem path of this photo.
-     * 
-     * @param newUri   new filePath to assign to the current Photo
-     */
-    public void setUri(Uri newUri){
-        this.uri = newUri;
+    public String getPath() {
+        return path;
     }
 
+    public void setPath(String path) {
+        this.path = path;
+    }
 
     /**
      * Get the tags list of this photo.
@@ -192,6 +176,7 @@ public class Photo implements Serializable {
     }
 
     public String getFileName(Context context) {
+        Uri uri = this.getUri();
         String result = null;
         if (uri.getScheme().equals("content")) {
             Cursor cursor = context.getContentResolver().query(uri, null, null, null, null);
@@ -211,6 +196,10 @@ public class Photo implements Serializable {
             }
         }
         return result;
+    }
+
+    public Uri getUri() {
+        return Uri.parse(this.path);
     }
 
     /**
@@ -234,6 +223,18 @@ public class Photo implements Serializable {
         }
     }
 
+    public static Bitmap getBitmap(Context context, Photo p) {
+        InputStream input = null;
+        try {
+            input = context.getContentResolver().openInputStream(p.getUri());
+            Bitmap bitmap = BitmapFactory.decodeStream(input);
+            input.close();
+            return bitmap;
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
     public static Bitmap getThumbnail(Context context, Photo p) {
         InputStream input = null;

@@ -81,6 +81,21 @@ public class Album implements Serializable {
         return this.photos;
     }
 
+    public Photo getPhoto(int index) {
+        if(this.photos == null) this.photos = new ArrayList<Photo>();
+        return this.photos.get(index);
+    }
+
+    public void removePhoto(Photo p) {
+        if(this.photos == null) this.photos = new ArrayList<Photo>();
+        this.photos.remove(p);
+    }
+
+    public void removePhoto(int index) {
+        if(this.photos == null) this.photos = new ArrayList<Photo>();
+        this.photos.remove(index);
+    }
+
     /**
      * Get the number of photos in this album.
      * 

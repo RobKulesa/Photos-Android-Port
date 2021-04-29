@@ -63,7 +63,7 @@ public class AlbumListActivity extends AppCompatActivity {
                             return;
                         }
                         albumList.addAlbum(new Album(newName));
-                        albumAdapter.notifyDataSetChanged();
+                        albumAdapter.notifyItemInserted(albumList.getLength());
                         Toast.makeText(AlbumListActivity.this, "Album Created Successfully!", Toast.LENGTH_SHORT).show();
                     }
                 });

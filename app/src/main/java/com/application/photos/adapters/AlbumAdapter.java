@@ -3,6 +3,7 @@ package com.application.photos.adapters;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -18,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.application.photos.R;
 import com.application.photos.activities.AlbumListActivity;
+import com.application.photos.activities.OpenAlbumActivity;
 import com.application.photos.structures.Album;
 import com.application.photos.structures.AlbumList;
 
@@ -51,7 +53,10 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.AlbumViewHol
                 popup.setOnMenuItemClickListener(menuItem -> {
                     switch(menuItem.getItemId()) {
                         case R.id.menuitemalbumopen:
-                            //Forward to album open
+                            Intent intent = new Intent(context, OpenAlbumActivity.class);
+                            intent.putExtra("albumList", albumList);
+                            intent.putExtra("album", position);
+                            context.startActivity(intent);
                             return true;
 
                         case R.id.menuitemalbumedit:

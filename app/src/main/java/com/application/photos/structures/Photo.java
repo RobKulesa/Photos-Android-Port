@@ -1,4 +1,16 @@
 package com.application.photos.structures;
+import android.content.Context;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.os.Parcel;
+import android.os.Parcelable;
+import android.provider.OpenableColumns;
+
+import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -29,9 +41,11 @@ public class Photo implements Serializable {
     private static final long serialVersionUID = 3L;
 
     /**
-     * Filepath of this photo.
+     * path of this photo.
      */
-    private String path;
+    private Uri uri;
+
+    private Bitmap bitmap;
 
     /**
      * TreeMap for the tags for this photo.
@@ -39,13 +53,12 @@ public class Photo implements Serializable {
     private TreeMap<String, ArrayList<String>> tags;
 
     /**
-     * Constructor for creating a new photo given its path on the filesystem..
+     * Constructor for creating a new photo given its path on the filesystem.
      * 
-     * @param path    The path of this photo on the filesystem.
+     * @param uri    The path of this photo on the filesystem.
      */
-    public Photo(String path){
-        this.path = path;
-
+    public Photo(Uri uri) {
+        this.uri = uri;
         this.tags = new TreeMap<>(
                 (Comparator<String> & Serializable) (o1, o2) -> o1.compareToIgnoreCase(o2)
         );
@@ -56,18 +69,19 @@ public class Photo implements Serializable {
      * 
      * @return    The path on the filesystem of this photo.
      */
-    public String getPath(){
-        return this.path;
+    public Uri getUri(){
+        return this.uri;
     }
     
     /**
      * Set the filesystem path of this photo.
      * 
-     * @param newPath   new filePath to assign to the current Photo
+     * @param newUri   new filePath to assign to the current Photo
      */
-    public void setPath(String newPath){
-        this.path = newPath;
+    public void setUri(Uri newUri){
+        this.uri = newUri;
     }
+
 
     /**
      * Get the tags list of this photo.
@@ -177,6 +191,28 @@ public class Photo implements Serializable {
         return false;
     }
 
+    public String getFileName(Context context) {
+        String result = null;
+        if (uri.getScheme().equals("content")) {
+            Cursor cursor = context.getContentResolver().query(uri, null, null, null, null);
+            try {
+                if (cursor != null && cursor.moveToFirst()) {
+                    result = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
+                }
+            } finally {
+                cursor.close();
+            }
+        }
+        if (result == null) {
+            result = uri.getPath();
+            int cut = result.lastIndexOf('/');
+            if (cut != -1) {
+                result = result.substring(cut + 1);
+            }
+        }
+        return result;
+    }
+
     /**
      * Return <code>true</code> if photo's path is the same as the passed string or passed photo's path.
      * 
@@ -191,10 +227,47 @@ public class Photo implements Serializable {
         }
         if(o instanceof Photo) {
             Photo otherPhoto = (Photo) o;
-            return this.getPath().equals(otherPhoto.getPath());
+            return this.getUri().equals(otherPhoto.getUri());
         } else {
             String otherString = (String) o;
-            return this.getPath().equals(otherString);
+            return this.getUri().toString().equals(otherString);
         }
     }
+
+
+    public static Bitmap getThumbnail(Context context, Photo p) {
+        InputStream input = null;
+        try {
+            input = context.getContentResolver().openInputStream(p.getUri());
+            BitmapFactory.Options onlyBoundsOptions = new BitmapFactory.Options();
+            onlyBoundsOptions.inJustDecodeBounds = true;
+            BitmapFactory.decodeStream(input, null, onlyBoundsOptions);
+            input.close();
+
+            if ((onlyBoundsOptions.outWidth == -1) || (onlyBoundsOptions.outHeight == -1)) {
+                return null;
+            }
+
+            int originalSize = Math.max(onlyBoundsOptions.outHeight, onlyBoundsOptions.outWidth);
+
+            double ratio = (originalSize > 100) ? (originalSize / 100) : 1.0;
+
+            BitmapFactory.Options bitmapOptions = new BitmapFactory.Options();
+            bitmapOptions.inSampleSize = getPowerOfTwoForSampleRatio(ratio);
+            input = context.getContentResolver().openInputStream(p.getUri());
+            Bitmap bitmap = BitmapFactory.decodeStream(input, null, bitmapOptions);
+            input.close();
+            return bitmap;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    private static int getPowerOfTwoForSampleRatio(double ratio){
+        int k = Integer.highestOneBit((int)Math.floor(ratio));
+        if(k==0) return 1;
+        else return k;
+    }
+
 }

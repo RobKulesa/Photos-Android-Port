@@ -3,6 +3,7 @@ package com.application.photos.adapters;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.text.InputType;
 import android.view.LayoutInflater;
@@ -18,19 +19,23 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.application.photos.R;
+import com.application.photos.activities.OpenAlbumActivity;
+import com.application.photos.activities.SlideshowActivity;
 import com.application.photos.structures.Album;
 import com.application.photos.structures.AlbumList;
 import com.application.photos.structures.Photo;
 
 import java.util.ArrayList;
 
-public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.PhotoViewHolder>{
-    private Album album;
+public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.PhotoViewHolder> {
+    private AlbumList albumList;
+    private int albumIndex;
     private Context context;
 
-    public PhotoAdapter(Context context, Album album) {
+    public PhotoAdapter(Context context, AlbumList albumList, int albumIndex) {
         this.context = context;
-        this.album = album;
+        this.albumList = albumList;
+        this.albumIndex = albumIndex;
     }
 
     @NonNull
@@ -42,7 +47,7 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.PhotoViewHol
 
     @Override
     public void onBindViewHolder(@NonNull PhotoViewHolder holder, int position) {
-        Photo photo = album.getPhoto(position);
+        Photo photo = albumList.getAlbum(albumIndex).getPhoto(position);
         holder.setDetails(Photo.getThumbnail(context, photo), photo.getFileName(context), photo.getTagStrings());
 
         holder.setItemClickListener(new ItemClickListener() {
@@ -54,12 +59,18 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.PhotoViewHol
                 popup.setOnMenuItemClickListener(menuItem -> {
                     switch(menuItem.getItemId()) {
                         case R.id.menuitemviewphoto:
-                            //Forward to photo slideshow open
+                            Intent intent = new Intent(context, SlideshowActivity.class);
+                            intent.putExtra("albumList", albumList);
+                            intent.putExtra("album", albumIndex);
+                            intent.putExtra("photo", position);
+                            context.startActivity(intent);
                             return true;
                         case R.id.menuitemdeletephoto:
-                            album.removePhoto(photo);
+                            albumList.getAlbum(albumIndex).removePhoto(photo);
                             PhotoAdapter.super.notifyItemRemoved(position);
                             return true;
+                        case R.id.menuitemmovephoto:
+                            //TODO: Add functionality for moving photo to diff album
                         default:
                             return true;
                     }
@@ -70,7 +81,7 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.PhotoViewHol
 
     @Override
     public int getItemCount() {
-        return album.getNumPhotos();
+        return albumList.getAlbum(albumIndex).getNumPhotos();
     }
 
     public class PhotoViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -87,7 +98,7 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.PhotoViewHol
             ImageView imageViewPhotoPreview = (ImageView) view.findViewById(R.id.imageViewPhotoPreview);
             TextView textViewFilename = (TextView) view.findViewById(R.id.textViewFilename);
             TextView textViewTags = (TextView) view.findViewById(R.id.textViewPhotoTags);
-
+            //TODO: set text view tags based on tags for photo
             imageViewPhotoPreview.setImageBitmap(bitmap);
             textViewFilename.setText(fileName);
             textViewTags.setText(tagsList.toString());

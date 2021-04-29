@@ -1,6 +1,7 @@
 package com.application.photos.structures;
 
 import android.content.Context;
+import android.widget.Toast;
 
 import java.io.*;
 import java.util.*;
@@ -122,6 +123,7 @@ public class AlbumList implements Serializable {
         ObjectOutputStream oos = new ObjectOutputStream(context.openFileOutput(storeFile, Context.MODE_PRIVATE));
         oos.writeObject(albumList);
         oos.close();
+        //Toast.makeText(context, "Successfully saved album list to filesystem!", Toast.LENGTH_SHORT).show();
     }
 
     /**

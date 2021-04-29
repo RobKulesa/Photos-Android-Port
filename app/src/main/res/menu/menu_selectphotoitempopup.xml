@@ -4,6 +4,9 @@
         android:id="@+id/menuitemviewphoto"
         android:title="View" />
     <item
+        android:id="@+id/menuitemmovephoto"
+        android:title="Move" />
+    <item
         android:id="@+id/menuitemdeletephoto"
         android:title="Delete" />
     <item

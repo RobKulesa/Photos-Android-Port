@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/menuitemalbumopen"
+        android:title="Open" />
+    <item
+        android:id="@+id/menuitemalbumedit"
+        android:title="Edit" />
+    <item
+        android:id="@+id/menuitemalbumdelete"
+        android:title="Delete"/>
+    <item
+        android:id="@+id/menuitemalbumcancel"
+        android:title="Cancel"/>
+</menu>

@@ -54,7 +54,8 @@ public class TagAdapter extends RecyclerView.Adapter<TagAdapter.TagHolder> {
                     switch(menuItem.getItemId()){
                         case R.id.menuitemdeletetag:
                             albumList.getAlbum(albumIndex).getPhoto(photoIndex).getTags().remove(position);
-                            TagAdapter.super.notifyItemRemoved(position);
+                            notifyItemRemoved(position);
+                            notifyDataSetChanged();
                             return true;
                         default:
                             return true;

@@ -69,7 +69,8 @@ public class OpenAlbumActivity extends AppCompatActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        super.onBackPressed();
+        Intent intent = new Intent(this, AlbumListActivity.class);
+        startActivity(intent);
     }
 
     @Override

@@ -157,6 +157,7 @@ public class Photo implements Serializable {
         ArrayList<String> vals = this.getTagValsByType(tagType);
         if(vals.isEmpty()) return false;
         for(String s : vals) {
+            System.out.println("Comparing: " + s + " with: " + val);
             if(s.equalsIgnoreCase(val)) return true;
         }
         return false;
@@ -178,7 +179,7 @@ public class Photo implements Serializable {
     }
 
     public String getTagValue(String fullTagString){
-        return fullTagString.substring(fullTagString.indexOf(':')+1);
+        return fullTagString.substring(fullTagString.indexOf(':')+2);
     }
 
 

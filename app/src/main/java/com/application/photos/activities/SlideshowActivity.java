@@ -1,5 +1,6 @@
 package com.application.photos.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import com.application.photos.adapters.PhotoAdapter;
@@ -56,7 +57,10 @@ public class SlideshowActivity extends FragmentActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        super.onBackPressed();
+        Intent intent = new Intent(this, OpenAlbumActivity.class);
+        intent.putExtra("albumList", albumList);
+        intent.putExtra("album", getIntent().getIntExtra("album", 0));
+        startActivity(intent);
     }
 
     @Override

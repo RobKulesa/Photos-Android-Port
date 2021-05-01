@@ -44,7 +44,7 @@ public class SlideshowActivity extends FragmentActivity {
         int albumIndex = getIntent().getIntExtra("album", 0);
         int photoIndex = getIntent().getIntExtra("photo", 0);
         album = albumList.getAlbum(albumIndex);
-        adapter = new SlideshowPagerAdapter(this, this, album);
+        adapter = new SlideshowPagerAdapter(this, this, albumList, albumIndex);
         viewPager.setAdapter(adapter);
         viewPager.setCurrentItem(photoIndex, true);
     }

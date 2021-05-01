@@ -21,11 +21,13 @@ import com.application.photos.structures.AlbumList;
 import java.io.IOException;
 
 public class AlbumListActivity extends AppCompatActivity {
+    //These are the XML Controls associated with this activity
     private RecyclerView recyclerView;
     private AlbumAdapter albumAdapter;
     private Button buttonCreateAlbum;
     private Button buttonSearchPhotos;
 
+    //Field
     private AlbumList albumList;
 
     @Override

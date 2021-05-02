@@ -45,8 +45,6 @@ public class Photo implements Serializable {
 
     public static final int isPerson = 1;
 
-
-
     /**
      * path of this photo.
      */
@@ -80,14 +78,6 @@ public class Photo implements Serializable {
     public ArrayList<String> getTags(){
         return this.tags;
     }
-
-
-    /**
-     * Get all the tag names for this photo.
-     * 
-     * @return    Set of type String, the tag names for this photo.
-     */
-    //public ArrayList<String> getTagNames() { }
 
 
     public void addTag(int tagType, String val) throws IllegalArgumentException {

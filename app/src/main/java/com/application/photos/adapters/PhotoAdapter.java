@@ -70,40 +70,45 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.PhotoViewHol
                                 return true;
                             case R.id.menuitemdeletephoto:
                                 albumList.getAlbum(albumIndex).removePhoto(photo);
-                                PhotoAdapter.super.notifyItemRemoved(position);
+                                notifyItemRemoved(position);
+                                notifyDataSetChanged();
                                 return true;
                             case R.id.menuitemmovephoto:
-                                AlertDialog.Builder b = new Builder(context);
-                                b.setTitle("Move To Another Album");
-                                //String[] types = {"By Zip", "By Category"};
-                                String[] albumNames = new String[albumList.getLength()-1];
-                                int j = 0;
-                                for(int i = 0; i<albumList.getLength(); i++){
-                                    String name = albumList.getAlbum(i).getName();
-                                    if(!name.equals(albumList.getAlbum(albumIndex).getName())){
-                                        albumNames[j] = name;
-                                        j++;
-                                    }
-
-                                }
-
-                                b.setItems(albumNames, new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        try{
-                                            String sendToAlbumName = albumNames[which];
-                                            Album sendToAlbum = albumList.getAlbumByName(sendToAlbumName);
-                                            sendToAlbum.addPhoto(photo);
-                                            albumList.getAlbum(albumIndex).removePhoto(photo);
-                                            PhotoAdapter.super.notifyItemRemoved(position);
-
-                                        } catch(IOException e){
-                                            System.out.print(e.getStackTrace());
+                                if(albumList.getLength() >= 2) {
+                                    AlertDialog.Builder b = new Builder(context);
+                                    b.setTitle("Move To Another Album");
+                                    //String[] types = {"By Zip", "By Category"};
+                                    String[] albumNames = new String[albumList.getLength() - 1];
+                                    int j = 0;
+                                    for (int i = 0; i < albumList.getLength(); i++) {
+                                        String name = albumList.getAlbum(i).getName();
+                                        if (!name.equals(albumList.getAlbum(albumIndex).getName())) {
+                                            albumNames[j] = name;
+                                            j++;
                                         }
+
                                     }
 
-                                });
-                                b.show();
+                                    b.setItems(albumNames, new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            try {
+                                                String sendToAlbumName = albumNames[which];
+                                                Album sendToAlbum = albumList.getAlbumByName(sendToAlbumName);
+                                                sendToAlbum.addPhoto(photo);
+                                                albumList.getAlbum(albumIndex).removePhoto(photo);
+                                                PhotoAdapter.super.notifyItemRemoved(position);
+
+                                            } catch (IOException e) {
+                                                System.out.print(e.getStackTrace());
+                                            }
+                                        }
+
+                                    });
+                                    b.show();
+                                } else {
+                                    Toast.makeText(context, "No other albums to move photo to!", Toast.LENGTH_SHORT).show();
+                                }
                                 return true;
                             default:
                                 return true;
@@ -144,7 +149,8 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.PhotoViewHol
             //TODO: set text view tags based on tags for photo
             imageViewPhotoPreview.setImageBitmap(bitmap);
             textViewFilename.setText(fileName);
-            textViewTags.setText(tagsList.toString());
+            if(tagsList != null) textViewTags.setText(tagsList.toString());
+            else textViewTags.setText("none");
         }
 
         public void setItemClickListener(ItemClickListener itemClickListener) {

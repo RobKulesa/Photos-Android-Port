@@ -69,7 +69,7 @@ public class TagAdapter extends RecyclerView.Adapter<TagAdapter.TagHolder> {
     @Override
     public int getItemCount() {
         //TODO: get number of tags
-        return albumList.getAlbum(albumIndex).getPhoto(photoIndex).getTags().size();
+        return albumList.getAlbum(albumIndex).getPhoto(photoIndex).getTags() == null ? 0 : albumList.getAlbum(albumIndex).getPhoto(photoIndex).getTags().size();
     }
 
     public class TagHolder extends RecyclerView.ViewHolder implements View.OnClickListener {

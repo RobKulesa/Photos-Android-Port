@@ -67,7 +67,8 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.PhotoViewHol
                             return true;
                         case R.id.menuitemdeletephoto:
                             albumList.getAlbum(albumIndex).removePhoto(photo);
-                            PhotoAdapter.super.notifyItemRemoved(position);
+                            notifyItemRemoved(position);
+                            notifyDataSetChanged();
                             return true;
                         case R.id.menuitemmovephoto:
                             //TODO: Add functionality for moving photo to diff album

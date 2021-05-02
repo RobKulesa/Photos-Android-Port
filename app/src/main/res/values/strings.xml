@@ -3,4 +3,14 @@
     <string name="title_activity_slideshow">SlideshowActivity</string>
     <string name="next">Next</string>
     <string name="previous">Previous</string>
+    <string-array name="search_options_array">
+        <item>Using Person Tag</item>
+        <item>Using Location Tag</item>
+        <item>Using Both Tags</item>
+    </string-array>
+
+    <string-array name="conjunction_array">
+        <item>OR</item>
+        <item>AND</item>
+    </string-array>
 </resources>

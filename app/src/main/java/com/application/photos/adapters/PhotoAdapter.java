@@ -14,7 +14,7 @@ import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
-
+import android.app.AlertDialog.Builder;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -25,17 +25,20 @@ import com.application.photos.structures.Album;
 import com.application.photos.structures.AlbumList;
 import com.application.photos.structures.Photo;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.PhotoViewHolder> {
     private AlbumList albumList;
     private int albumIndex;
     private Context context;
+    boolean isSearchResult;
 
-    public PhotoAdapter(Context context, AlbumList albumList, int albumIndex) {
+    public PhotoAdapter(Context context, AlbumList albumList, int albumIndex, boolean isSearchResult) {
         this.context = context;
         this.albumList = albumList;
         this.albumIndex = albumIndex;
+        this.isSearchResult = isSearchResult;
     }
 
     @NonNull
@@ -48,36 +51,75 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.PhotoViewHol
     @Override
     public void onBindViewHolder(@NonNull PhotoViewHolder holder, int position) {
         Photo photo = albumList.getAlbum(albumIndex).getPhoto(position);
-        holder.setDetails(Photo.getThumbnail(context, photo), photo.getFileName(context), photo.getTagStrings());
+        holder.setDetails(Photo.getThumbnail(context, photo), photo.getFileName(context), photo.getTags());
+        if(!isSearchResult){
+            holder.setItemClickListener(new ItemClickListener() {
+                @Override
+                public void onClick(View view, int menuItemPosition) {
+                    PopupMenu popup = new PopupMenu(context, view);
+                    popup.inflate(R.menu.menu_selectphotoitempopup);
+                    popup.show();
+                    popup.setOnMenuItemClickListener(menuItem -> {
+                        switch(menuItem.getItemId()) {
+                            case R.id.menuitemviewphoto:
+                                Intent intent = new Intent(context, SlideshowActivity.class);
+                                intent.putExtra("albumList", albumList);
+                                intent.putExtra("album", albumIndex);
+                                intent.putExtra("photo", position);
+                                context.startActivity(intent);
+                                return true;
+                            case R.id.menuitemdeletephoto:
+                                albumList.getAlbum(albumIndex).removePhoto(photo);
+                                PhotoAdapter.super.notifyItemRemoved(position);
+                                return true;
+                            case R.id.menuitemmovephoto:
+                                AlertDialog.Builder b = new Builder(context);
+                                b.setTitle("Move To Another Album");
+                                //String[] types = {"By Zip", "By Category"};
+                                String[] albumNames = new String[albumList.getLength()-1];
+                                int j = 0;
+                                for(int i = 0; i<albumList.getLength(); i++){
+                                    String name = albumList.getAlbum(i).getName();
+                                    if(!name.equals(albumList.getAlbum(albumIndex).getName())){
+                                        albumNames[j] = name;
+                                        j++;
+                                    }
 
-        holder.setItemClickListener(new ItemClickListener() {
-            @Override
-            public void onClick(View view, int menuItemPosition) {
-                PopupMenu popup = new PopupMenu(context, view);
-                popup.inflate(R.menu.menu_selectphotoitempopup);
-                popup.show();
-                popup.setOnMenuItemClickListener(menuItem -> {
-                    switch(menuItem.getItemId()) {
-                        case R.id.menuitemviewphoto:
-                            Intent intent = new Intent(context, SlideshowActivity.class);
-                            intent.putExtra("albumList", albumList);
-                            intent.putExtra("album", albumIndex);
-                            intent.putExtra("photo", position);
-                            context.startActivity(intent);
-                            return true;
-                        case R.id.menuitemdeletephoto:
-                            albumList.getAlbum(albumIndex).removePhoto(photo);
-                            notifyItemRemoved(position);
-                            notifyDataSetChanged();
-                            return true;
-                        case R.id.menuitemmovephoto:
-                            //TODO: Add functionality for moving photo to diff album
-                        default:
-                            return true;
-                    }
-                });
-            }
-        });
+                                }
+
+                                b.setItems(albumNames, new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        try{
+                                            String sendToAlbumName = albumNames[which];
+                                            Album sendToAlbum = albumList.getAlbumByName(sendToAlbumName);
+                                            sendToAlbum.addPhoto(photo);
+                                            albumList.getAlbum(albumIndex).removePhoto(photo);
+                                            PhotoAdapter.super.notifyItemRemoved(position);
+
+                                        } catch(IOException e){
+                                            System.out.print(e.getStackTrace());
+                                        }
+                                    }
+
+                                });
+                                b.show();
+                                return true;
+                            default:
+                                return true;
+                        }
+                    });
+                }
+            });
+        } else {
+            holder.setItemClickListener(new ItemClickListener() {
+                @Override
+                public void onClick(View view, int position) {
+                    return;
+                }
+            });
+        }
+
     }
 
     @Override
@@ -108,6 +150,7 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.PhotoViewHol
         public void setItemClickListener(ItemClickListener itemClickListener) {
             this.itemClickListener = itemClickListener;
         }
+
 
         @Override
         public void onClick(View view) {

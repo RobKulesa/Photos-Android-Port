@@ -16,15 +16,26 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
-            android:id="@+id/textViewTagHolder"
+            android:id="@+id/textViewTagHolderTagValue"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:gravity="left|center_vertical"
-            android:hint="Tag"
+            android:gravity="center"
+            android:hint="Tag Value"
             android:paddingStart="8dp"
-            android:textColor="#000000" />
+            android:textColor="#000000"
+            android:textSize="8sp" />
 
+        <TextView
+            android:id="@+id/textViewTagHolderTagName"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="right|center_vertical"
+            android:hint="Tag Type (Person/Location)"
+            android:inputType="number"
+            android:paddingEnd="8dp"
+            android:textColor="#000000" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

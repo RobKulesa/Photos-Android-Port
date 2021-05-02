@@ -178,4 +178,12 @@ public class AlbumList implements Serializable {
         }
         return false;
     }
+
+    public Album getAlbumByName(String u) throws IOException{
+        for(Album listAlbum: this.albums){
+            if(listAlbum.getName().equals(u)) return listAlbum;
+        }
+        throw new IOException("Album with name: " + u + " does not exist.");
+    }
+
 }

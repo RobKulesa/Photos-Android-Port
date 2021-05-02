@@ -91,7 +91,8 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.AlbumViewHol
                             return true;
                         case R.id.menuitemalbumdelete:
                             albumList.removeAlbum(position);
-                            AlbumAdapter.super.notifyItemRemoved(position);
+                            notifyItemRemoved(position);
+                            notifyDataSetChanged();
                             return true;
                         default:
                             return true;

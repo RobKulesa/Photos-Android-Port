@@ -12,6 +12,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.io.Serializable;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.GregorianCalendar;
@@ -40,6 +41,12 @@ public class Photo implements Serializable {
      */
     private static final long serialVersionUID = 3L;
 
+    public static final int isLocation = 0;
+
+    public static final int isPerson = 1;
+
+
+
     /**
      * path of this photo.
      */
@@ -50,13 +57,11 @@ public class Photo implements Serializable {
     /**
      * TreeMap for the tags for this photo.
      */
-    private TreeMap<String, ArrayList<String>> tags;
+    private ArrayList<String> tags;
 
     public Photo(String path) {
         this.path = path;
-        this.tags = new TreeMap<>(
-                (Comparator<String> & Serializable) (o1, o2) -> o1.compareToIgnoreCase(o2)
-        );
+        this.tags = new ArrayList<String>();
     }
 
     public String getPath() {
@@ -72,66 +77,46 @@ public class Photo implements Serializable {
      * 
      * @return    TreeMap of tags for this photo.
      */
-    public TreeMap<String, ArrayList<String>> getTags(){
+    public ArrayList<String> getTags(){
         return this.tags;
     }
 
-    /**
-     * Get the tags for this photo as a formatted string.
-     * 
-     * @return    ArrayList of type String, each formatted string is one tag.
-     */
-    public ArrayList<String> getTagStrings() {
-        ArrayList<String> tagStrings = new ArrayList<String>();
-        for(String name : this.tags.keySet()) {
-            for(String val : this.tags.get(name)) {
-                tagStrings.add("(" + name + ", " + val + ")");
-            }
-        }
-        return tagStrings;
-    }
 
     /**
      * Get all the tag names for this photo.
      * 
      * @return    Set of type String, the tag names for this photo.
      */
-    public Set<String> getTagNames() {
-        return this.tags.keySet();
-    }
+    //public ArrayList<String> getTagNames() { }
 
-    /**
-     * Add a tag to this photo.
-     * 
-     * @param name                         Name of the tag to be added.
-     * @param val                          Value of the tag to be added.
-     * @throws IllegalArgumentException    Thrown if tag already exists for this photo.
-     */
-    public void addTag(String name, String val) throws IllegalArgumentException {
-        name = name.toLowerCase();
+
+    public void addTag(int tagType, String val) throws IllegalArgumentException {
+        String s = "";
+        if(tagType == isLocation)
+            s += "location: ";
+        else if (tagType == isPerson)
+            s += "person: ";
+        else
+            s+= "error: ";
+
         val = val.toLowerCase();
-        ArrayList<String> vals = new ArrayList<String>();
-        if(!this.getTagNames().contains(name)) {
-            this.tags.put(name, vals);
+        ArrayList<String> vals = getTagValsByType(tagType);
+        for(String str : vals) {
+            if(str.equals(val)) throw new IllegalArgumentException("Tag Value already exists for this photo!");
         }
-        vals = this.getTagValsByName(name);
-        for(String s : vals) {
-            if(s.equals(val)) throw new IllegalArgumentException("Tag Value already exists for this photo!");
-        }
-        this.tags.get(name).add(val);
+        s += val;
+        this.tags.add(s);
+        System.out.println("Tag added = " + s);
     }
 
-    /**
-     * Get the tag values for the provided tag name for this photo.
-     * 
-     * @param name    The tag name to get the values for.
-     * @return        The tag values for this tag name.
-     */
-    public ArrayList<String> getTagValsByName(String name) {
-        name = name.toLowerCase();
-        ArrayList<String> vals = this.tags.get(name);
-        if(vals == null) vals = new ArrayList<String>();
-        return vals;
+
+    public ArrayList<String> getTagValsByType(int tagType) {
+        ArrayList<String> valList = new ArrayList<String>();
+        for(String s : tags){
+            if(isTagType(tagType, s))
+                valList.add(getTagValue(s));
+        }
+        return valList;
     }
 
     /**
@@ -141,6 +126,7 @@ public class Photo implements Serializable {
      * @param val                          Value of tag to be added.
      * @throws IllegalArgumentException    Thrown if tag does not exist for this photo.
      */
+    /*
     public void removeTag(String name, String val) throws IllegalArgumentException {
         name = name.toLowerCase();
         if(!this.getTagNames().contains(name)) throw new IllegalArgumentException("Tag Name does not exist!");
@@ -155,25 +141,50 @@ public class Photo implements Serializable {
             }
         });
     }
+    */
+
 
     /**
      * Return <code>true</code> if this photo has the given tag.
-     * 
-     * @param name    Tag name to be checked.
+     *
+     * @param tagType    Tag type to be checked.
      * @param val     Tag value to be checked.
      * @return        <code>true</code> if this photo has the given tag.
      *                <code>false</code> otherwise.
      */
-    public boolean hasTag(String name, String val) {
-        name = name.toLowerCase();
+    public boolean hasTag(int tagType, String val) {
         val = val.toLowerCase();
-        ArrayList<String> vals = this.getTagValsByName(name);
+        ArrayList<String> vals = this.getTagValsByType(tagType);
         if(vals.isEmpty()) return false;
         for(String s : vals) {
+            System.out.println("Comparing: " + s + " with: " + val);
             if(s.equalsIgnoreCase(val)) return true;
         }
         return false;
     }
+
+
+
+
+    public boolean isTagType(int tagNameType, String fullTagString){
+        String tagName = fullTagString.substring(0, fullTagString.indexOf(':'));
+        if(tagNameType == isLocation)
+            return tagName.equals("location");
+        else if(tagNameType == isPerson)
+            return tagName.equals("person");
+        else
+            return false;
+    }
+
+    public String getTagName(String fullTagString){
+        return fullTagString.substring(0, fullTagString.indexOf(':'));
+    }
+
+    public String getTagValue(String fullTagString){
+        return fullTagString.substring(fullTagString.indexOf(':')+2);
+    }
+
+
 
     public String getFileName(Context context) {
         Uri uri = this.getUri();

@@ -13,10 +13,6 @@
         android:gravity="center_horizontal"
         android:orientation="vertical">
 
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="14dp" />
-
         <TextView
             android:id="@+id/textView"
             android:layout_width="wrap_content"
@@ -24,11 +20,15 @@
             android:layout_marginStart="0dp"
             android:layout_marginTop="0dp"
             android:text="Search Photos By Tag"
-            android:textAppearance="@style/TextAppearance.AppCompat.Display1" />
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
         <Space
             android:layout_width="match_parent"
-            android:layout_height="61dp" />
+            android:layout_height="14dp" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="12dp" />
 
         <Spinner
             android:id="@+id/spinnerSearchOptions"
@@ -40,43 +40,107 @@
             android:layout_width="match_parent"
             android:layout_height="41dp" />
 
-        <EditText
-            android:id="@+id/editTextPersonName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="0dp"
-            android:layout_marginTop="0dp"
-            android:hint = "Person Tag Value"
-            android:ems="10"
-            android:inputType="textPersonName" />
-
-        <Space
+        <TableLayout
             android:layout_width="match_parent"
-            android:layout_height="44dp" />
+            android:layout_height="289dp"
+            android:gravity="center_horizontal">
 
-        <Spinner
-            android:id="@+id/spinnerConjunction"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="0dp" />
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp">
 
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="28dp" />
+                <TextView
+                    android:id="@+id/textViewTag1Type"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Tag1 Type" />
 
-        <EditText
-            android:id="@+id/editTextLocationName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="0dp"
-            android:layout_marginTop="0dp"
-            android:ems="10"
-            android:hint="Location Tag Value"
-            android:inputType="textPersonName" />
+                <Spinner
+                    android:id="@+id/spinnerTag1Type"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
 
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="63dp" />
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="62dp"
+                android:layout_margin="10dp">
+
+                <TextView
+                    android:id="@+id/textViewTag1Value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Tag1 Value" />
+
+                <EditText
+                    android:id="@+id/editTextTag1Val"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:hint="Tag1 Value"
+                    android:inputType="textPersonName" />
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="10dp">
+
+                <TextView
+                    android:id="@+id/textViewConjunction"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Conjunction" />
+
+                <Spinner
+                    android:id="@+id/spinnerConjunction"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="10dp">
+
+                <TextView
+                    android:id="@+id/textViewTag2Type"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Tag2 Type" />
+
+                <Spinner
+                    android:id="@+id/spinnerTag2Type"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="10dp">
+
+                <TextView
+                    android:id="@+id/textViewTag2Value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Tag2 Value" />
+
+                <EditText
+                    android:id="@+id/editTextTag2Val"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:hint="Tag2 Value"
+                    android:inputType="textPersonName" />
+            </TableRow>
+
+
+        </TableLayout>
+
+
 
         <Button
             android:id="@+id/buttonSearchTags"
@@ -85,6 +149,7 @@
             android:layout_marginStart="0dp"
             android:layout_marginBottom="0dp"
             android:text="Search" />
+
     </LinearLayout>
 
 

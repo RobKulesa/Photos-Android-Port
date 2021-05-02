@@ -59,6 +59,85 @@ public class SearchResultsActivity extends AppCompatActivity{
         super.onStart();
         Album searchResults;
         ArrayList<Photo> allPhotos = new ArrayList<Photo>();
+        String conjunction = getIntent().getStringExtra("conjunction");
+        for(Album alb: albumList.getAlbums()){
+            for(Photo p : alb.getPhotos()){
+                allPhotos.add(p);
+            }
+        }
+        int tag1Type = getIntent().getIntExtra("tag1Type", 0);
+        String tag1Value = getIntent().getStringExtra("tag1Value");
+        ArrayList<Photo> finalList = new ArrayList<Photo>();
+        if(conjunction.equals("none")){
+
+            for(Photo p: allPhotos){
+                for(String tag: p.getTags()){
+                    if(p.isTagType(tag1Type, tag) && p.getTagValue(tag).length() >= tag1Value.length() &&
+                            p.getTagValue(tag).substring(0, tag1Value.length()).equals(tag1Value)){
+                        finalList.add(p);
+                        break;
+                    }
+                }
+            }
+
+        } else{
+            int tag2Type = getIntent().getIntExtra("tag2Type", 0);
+            String tag2Value = getIntent().getStringExtra("tag2Value");
+
+            if(conjunction.equals("and")){
+                ArrayList<Photo> tempList = new ArrayList<Photo>();
+                for(Photo p: allPhotos){
+                    for(String tag: p.getTags()){
+                        if(p.isTagType(tag1Type, tag) && p.getTagValue(tag).length() >= tag1Value.length() &&
+                                p.getTagValue(tag).substring(0, tag1Value.length()).equals(tag1Value)){
+                            tempList.add(p);
+                            break;
+                        }
+                    }
+                }
+
+                for(Photo p: tempList){
+                    for(String tag: p.getTags()){
+                        if(p.isTagType(tag2Type, tag) && p.getTagValue(tag).length() >= tag2Value.length() &&
+                                p.getTagValue(tag).substring(0, tag2Value.length()).equals(tag2Value)){
+                            finalList.add(p);
+                            break;
+                        }
+                    }
+                }
+
+
+            } else {
+                for(Photo p: allPhotos){
+                    for(String tag: p.getTags()){
+                        if(p.isTagType(tag1Type, tag) && p.getTagValue(tag).length() >= tag1Value.length() &&
+                                p.getTagValue(tag).substring(0, tag1Value.length()).equals(tag1Value)){
+                            finalList.add(p);
+                            break;
+                        }
+
+                        if(p.isTagType(tag2Type, tag) && p.getTagValue(tag).length() >= tag2Value.length() &&
+                                p.getTagValue(tag).substring(0, tag2Value.length()).equals(tag2Value)){
+                            finalList.add(p);
+                            break;
+                        }
+                    }
+                }
+
+
+            }
+        }
+        int index = albumList.getLength();
+        Album tempAlb = new Album("temp");
+        for(Photo p : finalList){
+            tempAlb.addPhoto(p);
+            System.out.println("Added: " + p.toString());
+        }
+        albumList.addAlbum(tempAlb);
+        photoAdapter = new PhotoAdapter(this, albumList, index, true);
+        recyclerViewSearchResults.setAdapter(photoAdapter);
+        photoAdapter.notifyDataSetChanged();
+        /*
         String location = getIntent().getStringExtra("locationName").toLowerCase();
         String person = getIntent().getStringExtra("personName").toLowerCase();
         for(Album alb: albumList.getAlbums()){
@@ -147,6 +226,8 @@ public class SearchResultsActivity extends AppCompatActivity{
         photoAdapter = new PhotoAdapter(this, albumList, index, true);
         recyclerViewSearchResults.setAdapter(photoAdapter);
         photoAdapter.notifyDataSetChanged();
+
+         */
 
     }
     @Override

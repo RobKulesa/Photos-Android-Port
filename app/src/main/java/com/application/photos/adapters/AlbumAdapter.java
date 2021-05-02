@@ -76,7 +76,7 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.AlbumViewHol
                                         return;
                                     }
                                     album.setName(newName);
-                                    AlbumAdapter.super.notifyItemChanged(position);
+                                    notifyItemChanged(position);
                                     Toast.makeText(context, "Album Renamed successfully!", Toast.LENGTH_SHORT).show();
                                 }
                             });

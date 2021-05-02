@@ -146,10 +146,9 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.PhotoViewHol
             ImageView imageViewPhotoPreview = (ImageView) view.findViewById(R.id.imageViewPhotoPreview);
             TextView textViewFilename = (TextView) view.findViewById(R.id.textViewFilename);
             TextView textViewTags = (TextView) view.findViewById(R.id.textViewPhotoTags);
-            //TODO: set text view tags based on tags for photo
             imageViewPhotoPreview.setImageBitmap(bitmap);
             textViewFilename.setText(fileName);
-            if(tagsList != null) textViewTags.setText(tagsList.toString());
+            if(!tagsList.isEmpty()) textViewTags.setText(tagsList.toString());
             else textViewTags.setText("none");
         }
 

@@ -53,7 +53,6 @@ public class SearchResultsActivity extends AppCompatActivity{
 
     }
 
-
     @Override
     protected void onStart() {
         super.onStart();
@@ -132,6 +131,10 @@ public class SearchResultsActivity extends AppCompatActivity{
         for(Photo p : finalList){
             tempAlb.addPhoto(p);
             System.out.println("Added: " + p.toString());
+        }
+        if(tempAlb.getNumPhotos() < 1) {
+            Toast.makeText(this, "Search Returned No Results!", Toast.LENGTH_SHORT).show();
+            onBackPressed();
         }
         albumList.addAlbum(tempAlb);
         photoAdapter = new PhotoAdapter(this, albumList, index, true);
@@ -238,11 +241,7 @@ public class SearchResultsActivity extends AppCompatActivity{
                 albumList.removeAlbum(a);
             }
         }
-
-
         intent.putExtra("albumList", albumList);
-
-
         startActivity(intent);
     }
 

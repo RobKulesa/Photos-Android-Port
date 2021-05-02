@@ -119,7 +119,7 @@ public class AlbumList implements Serializable {
      * @throws IOException    Thrown if file failed to be opened.
      */
     public static void writeAlbumList(Context context, AlbumList albumList) throws IOException {
-        if(albumList == null || albumList.getAlbums() == null || albumList.getAlbums().isEmpty()) return;
+        if(albumList == null || albumList.getAlbums() == null) albumList = new AlbumList();
         ObjectOutputStream oos = new ObjectOutputStream(context.openFileOutput(storeFile, Context.MODE_PRIVATE));
         oos.writeObject(albumList);
         oos.close();

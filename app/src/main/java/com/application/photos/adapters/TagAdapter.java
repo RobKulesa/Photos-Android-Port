@@ -38,12 +38,10 @@ public class TagAdapter extends RecyclerView.Adapter<TagAdapter.TagHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull TagHolder holder, int position) {
-        //TODO: load tag into holder
         Photo photo = albumList.getAlbum(albumIndex).getPhoto(photoIndex);
         String tag = photo.getTags().get(position);
         holder.setDetails(photo.getTagName(tag), photo.getTagValue(tag));
 
-        //TODO: set tag holder click listener to allow for removing tags from photo
         holder.setItemClickListener(new ItemClickListener() {
             @Override
             public void onClick(View view, int position) {
@@ -68,7 +66,6 @@ public class TagAdapter extends RecyclerView.Adapter<TagAdapter.TagHolder> {
 
     @Override
     public int getItemCount() {
-        //TODO: get number of tags
         return albumList.getAlbum(albumIndex).getPhoto(photoIndex).getTags() == null ? 0 : albumList.getAlbum(albumIndex).getPhoto(photoIndex).getTags().size();
     }
 

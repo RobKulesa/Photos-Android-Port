@@ -94,7 +94,10 @@ public class AlbumListActivity extends AppCompatActivity {
         buttonSearchPhotos.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO: Search photos by tags
+                if(albumAdapter.getItemCount() < 1) {
+                    Toast.makeText(AlbumListActivity.this, "Cannot search with no albums!", Toast.LENGTH_LONG).show();
+                    return;
+                }
                 Intent intent = new Intent(context, PhotosSearchActivity.class);
                 intent.putExtra("albumList", albumList);
                 context.startActivity(intent);

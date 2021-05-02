@@ -63,7 +63,6 @@ public class SlideshowPageFragment extends Fragment {
         recyclerViewSlideshowImageTags.setAdapter(tagAdapter);
         tagAdapter.notifyDataSetChanged();
 
-        //TODO: Create Person Button onClickListener
         addPersonTag.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
@@ -105,8 +104,6 @@ public class SlideshowPageFragment extends Fragment {
             }
         });
 
-
-        //TODO: Create Locatio nButton Onclicklistener
         addLocationTag.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){

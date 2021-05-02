@@ -33,8 +33,7 @@
                 android:id="@+id/recyclerViewSlideshowImageTags"
                 android:layout_width="525dp"
                 android:layout_height="match_parent"
-                android:layout_weight="0.3"
-                android:paddingBottom="?attr/actionBarSize">
+                android:layout_weight="0.3">
 
             </androidx.recyclerview.widget.RecyclerView>
 

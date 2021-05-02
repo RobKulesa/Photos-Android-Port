@@ -164,6 +164,8 @@ public class Photo implements Serializable {
     }
 
 
+
+
     public boolean isTagType(int tagNameType, String fullTagString){
         String tagName = fullTagString.substring(0, fullTagString.indexOf(':'));
         if(tagNameType == isLocation)

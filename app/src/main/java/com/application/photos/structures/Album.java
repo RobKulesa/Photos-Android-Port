@@ -35,6 +35,7 @@ public class Album implements Serializable {
         this.photos = new ArrayList<Photo>();
     }
 
+
     /**
      * Get the name of this album.
      * 

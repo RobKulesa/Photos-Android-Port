@@ -5,9 +5,12 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -17,6 +20,7 @@ import com.application.photos.R;
 import com.application.photos.adapters.AlbumAdapter;
 import com.application.photos.structures.Album;
 import com.application.photos.structures.AlbumList;
+import com.application.photos.activities.PhotosSearchActivity;
 
 import java.io.IOException;
 
@@ -86,11 +90,15 @@ public class AlbumListActivity extends AppCompatActivity {
                 dialogBuilder.show();
             }
         });
-
+        Context context = this;
         buttonSearchPhotos.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //TODO: Search photos by tags
+                Intent intent = new Intent(context, PhotosSearchActivity.class);
+                intent.putExtra("albumList", albumList);
+                context.startActivity(intent);
+                return;
             }
         });
     }

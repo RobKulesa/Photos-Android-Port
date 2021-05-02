@@ -19,7 +19,6 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.application.photos.R;
-import com.application.photos.activities.TagListActivity;
 import com.application.photos.structures.Photo;
 import com.application.photos.structures.AlbumList;
 import com.application.photos.adapters.TagAdapter;

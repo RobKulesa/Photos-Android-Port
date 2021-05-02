@@ -92,7 +92,7 @@ public class OpenAlbumActivity extends AppCompatActivity {
         albumList = (AlbumList) getIntent().getSerializableExtra("albumList");
         int index = getIntent().getIntExtra("album", 0);
         album = albumList.getAlbum(index);
-        photoAdapter = new PhotoAdapter(this, albumList, index);
+        photoAdapter = new PhotoAdapter(this, albumList, index, false);
         recyclerViewPhotoList.setAdapter(photoAdapter);
         photoAdapter.notifyDataSetChanged();
 
